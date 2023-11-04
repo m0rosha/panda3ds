@@ -1,5 +1,5 @@
 from mapmngr import * 
-from mapmngr import savemap, loadmap
+
 class Hero():
     def __init__(self,pos,land):
         self.land = land
@@ -79,7 +79,9 @@ class Hero():
             self.just_move(angle)
         else:
             self.try_move(angle)
-        
+    def tfoo(self):
+        self.forward()   
+        self.land.randomspawn()
 
     def back(self):
         angle = self.hero.getH() % 360
@@ -129,7 +131,7 @@ class Hero():
         base.accept('n-repeat', self.turn_left)
         base.accept('m', self.turn_right)
         base.accept('m-repeat', self.turn_right)
-        base.accept('s', self.forward)
+        base.accept('s', self.tfoo)
         base.accept('s-repeat', self.forward)
         base.accept('w', self.back)
         base.accept('w-repeat', self.back)
@@ -144,4 +146,7 @@ class Hero():
         base.accept('z', self.changeMode)
         base.accept('f', self.build)
         base.accept('x', self.destroy)
+        base.accept('l', self.land.loadmap)
+        base.accept('p', self.land.savemap)
+        
         

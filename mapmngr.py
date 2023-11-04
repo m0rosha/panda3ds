@@ -1,10 +1,19 @@
 import pickle 
+import random as rd
 class MapManager:
     def __init__(self):
         self.model = 'mainsh/block.egg'
         self.m_texture = 'mainsh/block.png'
-        self.color = (0.04,0.79,0.17,1)
+        self.poop = 'mainsh/Poop.tga'
+        
         self.addNew()
+    def randomspawn(self):
+        poop = loader.loadModel(self.model)
+        pooptexture = loader.loadTexture(self.m_texture)
+        poop.setTexture(pooptexture)
+        poop.setPos((rd.randint(1,23), rd.randint(1,11),1))
+        poop.reparentTo(self.land)
+
     def startNew(self):
         self.land = render.attachNewNode("Land")      
     def findBlocks(self,pos):
@@ -29,7 +38,7 @@ class MapManager:
     def addNew(self): 
         ''' основа нової карти
         '''
-        self.land = render.attachNewNode('Land',)
+        self.land = render.attachNewNode('Land')
     def addBlock(self,position):
         """добавляєм блоки"""
         block = loader.loadModel(self.model)
@@ -37,7 +46,7 @@ class MapManager:
         
         block.setTexture(m_texture)
         block.setPos(position)
-        block.setColor(self.color)
+        
         block.setTag('at',str(position))
         block.reparentTo(self.land)
     def delBlock(self, position):
@@ -82,7 +91,7 @@ class MapManager:
 
     def clearmap(self):
         self.land.removeNode()
-        self.land.startNew()
+        self.startNew()
     
     
     def loadmap(self):
