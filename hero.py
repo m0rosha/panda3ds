@@ -1,4 +1,5 @@
 from mapmngr import * 
+from direct.gui.OnscreenText import OnscreenText
 
 class Hero():
     def __init__(self,pos,land):
@@ -10,8 +11,9 @@ class Hero():
         self.hero.reparentTo(render)
         self.cameraBind()
         self.accept_events()
-        self.mode = True
-
+        self.mode = False
+        self.aza = 0
+        self.textObject = OnscreenText(text=f'Score:{str(self.aza)}', pos=(0, 0.02), scale=0.07)
     def cameraBind(self):
         base.camera.reparentTo(self.hero)
         base.camera.setPos(0, 0, 1)
@@ -60,8 +62,12 @@ class Hero():
         dx, dy = self.checkdir(angle)
 
         return x+dx, y+dy, z
+    
+    
     def try_move(self, angle):
         pos = self.look_at(angle)
+        
+        
         if self.land.isEmpty(pos):
             pos = self.land.findHE(pos)
             self.hero.setPos(pos)
@@ -69,7 +75,20 @@ class Hero():
             pos = pos[0], pos[1], pos[2] + 1
             if self.land.isEmpty(pos):
                 self.hero.setPos(pos)
-    
+        
+        pos = self.look_at(angle)
+        
+        
+        if self.land.isFilled(pos):
+            
+            self.land.delPoop(pos)
+            self.aza += 1
+            self.textObject.setText(f'Score:{str(self.aza)}')
+            
+            
+
+
+
     def just_move(self, angle):
         pos = self.look_at(angle)
         self.hero.setPos(pos)
@@ -80,9 +99,10 @@ class Hero():
         else:
             self.try_move(angle)
     def tfoo(self):
-        self.forward()   
+        self.forward()
+        
         self.land.randomspawn()
-
+                
     def back(self):
         angle = self.hero.getH() % 360
         self.move_to(angle)

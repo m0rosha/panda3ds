@@ -1,24 +1,41 @@
 import pickle 
 import random as rd
+
 class MapManager:
     def __init__(self):
         self.model = 'mainsh/block.egg'
         self.m_texture = 'mainsh/block.png'
-        self.poop = 'mainsh/Poop.tga'
+        self.poop = 'POOP/Cake.egg'
+        self.p_texture= 'POOP/cake.tif'
+        
         
         self.addNew()
     def randomspawn(self):
-        poop = loader.loadModel(self.model)
-        pooptexture = loader.loadTexture(self.m_texture)
+        ppos = (rd.randint(1,23), rd.randint(1,11),1)
+        poop = loader.loadModel(self.poop)
+        pooptexture = loader.loadTexture(self.p_texture)
+        poop.setTag('bebra',str(ppos))
         poop.setTexture(pooptexture)
-        poop.setPos((rd.randint(1,23), rd.randint(1,11),1))
+        poop.setScale(0.01)
+        poop.setPos(ppos)
         poop.reparentTo(self.land)
-
+    
     def startNew(self):
         self.land = render.attachNewNode("Land")      
     def findBlocks(self,pos):
         
         return self.land.findAllMatches('=at='+str(pos))
+    def findPoops(self,pos):
+        return self.land.findAllMatches('=bebra='+str(pos))
+    def isFilled(self,pos):
+        poops = self.findPoops(pos)
+        if poops:
+            return True
+        else:
+            return False
+
+    
+    
     def isEmpty(self,pos):
         blocks = self.findBlocks(pos)
         if blocks:
@@ -49,6 +66,10 @@ class MapManager:
         
         block.setTag('at',str(position))
         block.reparentTo(self.land)
+    def delPoop(self,position):
+        poops = self.findPoops(position)
+        for poop in poops:
+            poop.removeNode()
     def delBlock(self, position):
        blocks = self.findBlocks(position)
        for block in blocks:
